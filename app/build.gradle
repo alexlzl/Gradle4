@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
+
+    defaultConfig {
+        applicationId "com.example.gradle1"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        flavorDimensions "versionCode"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+            jniLibs.srcDirs = ['libs']
+        }
+        if (isBangbang()) {
+            bangbang {
+                manifest.srcFile 'src/bangbang/AndroidManifest.xml'
+                java.srcDirs = ['src/bangbang/java']
+                resources.srcDirs = ['src/bangbang/java']
+                aidl.srcDirs = ['src/bangbang/java']
+                renderscript.srcDirs = ['src/bangbang/java']
+                res.srcDirs = ['src/bangbang/res']
+                assets.srcDirs = ['src/bangbang/assets']
+                jniLibs.srcDirs = ['libs']
+            }
+
+
+
+        }
+    }
+
+    //    //小美帮帮APP
+    if (isBangbang()) {
+        productFlavors {
+
+            bangbang {
+                //帮帮代码维护
+                applicationId "cn.gome.bangbang"
+                manifestPlaceholders = [PACKAGE_NAME: "cn.gome.bangbang", AMAP_API_KEY: "752c3ee3c1947430304220827588111a"]
+            }
+        }
+    }
+}
+
+def isBangbang() {
+    def mini = false
+    if (hasProperty('ASSIST') && getProperty("ASSIST") == 'true') {
+        mini = true
+    }
+    return mini
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+}
