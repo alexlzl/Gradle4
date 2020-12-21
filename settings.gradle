@@ -1,2 +1,5 @@
+include ':demo2lib'
+include ':demo2'
+include ':demo1'
 include ':app'
 rootProject.name = "Gradle1"

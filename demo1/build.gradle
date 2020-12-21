@@ -1,0 +1,91 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
+
+    defaultConfig {
+        applicationId "com.example.demo1"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+}
+//父类
+class Animal {
+
+    String username
+    int legs
+
+    Animal(String name) {
+        username = name
+    }
+
+    void setLegs(int c) {
+        legs = c
+    }
+
+    String toString() {
+        return "This animal is $username, it has ${legs} legs."
+    }
+}
+
+//子类
+class Pig extends Animal {
+
+    int age
+    String owner
+
+    Pig(int age, String owner) {
+        super("Pig")
+        this.age = age
+        this.owner = owner
+    }
+
+    String toString() {
+        return super.toString() + " Its age is $age, its owner is $owner."
+    }
+
+}
+
+//创建的Extension是 Animal 类型
+Animal aAnimal = getExtensions().create(Animal, "animal", Pig, 3, "hjy")
+//创建的Extension是 Pig 类型
+Pig aPig = getExtensions().create("pig", Pig, 5, "kobe")
+
+animal {
+    legs = 4    //配置属性
+}
+
+pig {
+    setLegs 2   //这个是方法调用，也就是 setLegs(2)
+}
+
+task testExt  {
+    println aAnimal
+    println aPig
+    //验证 aPig 对象是 ExtensionAware 类型的
+    println "====aPig is a instance of ExtensionAware : ${aPig instanceof ExtensionAware}==="
+    def android = project.getExtensions().getByName("android")
+    println android.toString()
+}
